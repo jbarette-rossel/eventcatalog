@@ -76,6 +76,21 @@ const resourcePointer = z.object({
   type: z.enum(['service', 'event', 'command', 'query', 'flow', 'channel', 'domain', 'user', 'team', 'container']),
 });
 
+const technologyPointer = z.object({
+  id: z.string()
+  .regex(/^[^@]+@.+$/, {
+    message: "Id must be in format 'id@version' (e.g., 'javascript@20.0.0')",
+  })
+  .transform((str) => {
+    const [id, version] = str.split('@');
+    return {
+      id: id.trim(),
+      supportedVersion: version.trim(),
+    }
+  }),
+  version: z.string().optional().default('latest'),
+});
+
 const changelogs = defineCollection({
   loader: glob({
     pattern: ['**/changelog.(md|mdx)'],
@@ -390,6 +405,7 @@ const services = defineCollection({
       entities: z.array(pointer).optional(),
       writesTo: z.array(pointer).optional(),
       readsFrom: z.array(pointer).optional(),
+      technologies: z.array(technologyPointer).optional(),
       detailsPanel: z
         .object({
           domains: detailPanelPropertySchema.optional(),
@@ -700,6 +716,32 @@ const designs = defineCollection({
   }),
 });
 
+const technologies = defineCollection({
+  loader: glob({ 
+    pattern: [
+      'technologies/*/index.(md|mdx)', 
+      'technologies/*/versioned/*/index.(md|mdx)',
+    ],
+    base: projectDirBase, 
+    generateId: ({ data, ...rest }) => {
+      return `${data.id}-${data.version}`;
+    } 
+  }),
+  schema: z
+    .object({
+      supportedVersions: z.array(z.string()).optional(),
+      radar: z
+        .object({
+          quadrant: z.enum(['tools', 'techniques', 'platforms', 'languages-frameworks']),
+          adoption: z.enum(['assess', 'trial', 'adopt', 'hold']),
+        })
+        .optional(),
+      website: z.string().url().optional(),
+      logo: z.string().optional(),
+    })
+    .merge(baseSchema),
+});
+
 export const collections = {
   events,
   commands,
@@ -713,6 +755,7 @@ export const collections = {
   pages,
   changelogs,
   containers,
+  technologies,
 
   // DDD Collections
   ubiquitousLanguages,

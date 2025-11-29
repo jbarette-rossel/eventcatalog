@@ -16,7 +16,8 @@ type AllowedCollections =
   | 'channels'
   | 'entities'
   | 'flows'
-  | 'containers';
+  | 'containers'
+  | 'technologies';
 
 const events = await getCollection('events');
 const commands = await getCollection('commands');
@@ -29,6 +30,7 @@ const entities = await getCollection('entities');
 const channels = await getCollection('channels');
 const flows = await getCollection('flows');
 const containers = await getCollection('containers');
+const technologies = await getCollection('technologies');
 const customDocs = await getCollection('customPages');
 
 import { isLLMSTxtEnabled } from '@utils/feature';
@@ -50,6 +52,7 @@ export const GET: APIRoute = async ({ params, request }) => {
     ...channels,
     ...containers,
     ...flows,
+    ...technologies,
   ];
 
   if (isCustomDocsEnabled()) {

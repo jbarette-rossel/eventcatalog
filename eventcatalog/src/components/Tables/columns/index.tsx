@@ -5,6 +5,7 @@ import { columns as DomainTableColumns } from './DomainTableColumns';
 import { columns as FlowTableColumns } from './FlowTableColumns';
 import { columns as TeamsTableColumns } from './TeamsTableColumns';
 import { columns as ContainerTableColumns } from './ContainersTableColumns';
+import { columns as TechnologiesTableColumns } from './TechnologiesTableColumns';
 import type { TableConfiguration } from '@types';
 export const getColumnsByCollection = (collection: string, tableConfiguration: TableConfiguration): any => {
   switch (collection) {
@@ -24,6 +25,8 @@ export const getColumnsByCollection = (collection: string, tableConfiguration: T
       return TeamsTableColumns(tableConfiguration);
     case 'containers':
       return ContainerTableColumns(tableConfiguration);
+    case 'technologies':
+      return TechnologiesTableColumns(tableConfiguration);
     default:
       return [];
   }

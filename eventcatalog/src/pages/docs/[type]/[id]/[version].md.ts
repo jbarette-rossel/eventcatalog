@@ -17,6 +17,7 @@ const flows = await getCollection('flows');
 const channels = await getCollection('channels');
 const containers = await getCollection('containers');
 const entities = await getEntities();
+const technologies = await getCollection('technologies');
 export async function getStaticPaths() {
   // Just return empty array if LLMs are not enabled
   if (!config.llmsTxt?.enabled) {
@@ -33,6 +34,7 @@ export async function getStaticPaths() {
     channels,
     containers,
     entities,
+    technologies,
   };
   const paths = Object.keys(collections).map((type) => {
     return collections[type as keyof typeof collections].map((item: { data: { id: string; version: string } }) => ({

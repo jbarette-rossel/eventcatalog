@@ -16,6 +16,7 @@ const domains = await getCollection('domains');
 const flows = await getCollection('flows');
 const channels = await getCollection('channels');
 const entities = await getCollection('entities');
+const technologies = await getCollection('technologies');
 
 import utils from '@eventcatalog/sdk';
 
@@ -33,6 +34,7 @@ export async function getStaticPaths() {
     flows,
     channels,
     entities,
+    technologies,
   };
   const paths = Object.keys(collections).map((type) => {
     return collections[type as keyof typeof collections].map((item: { data: { id: string; version: string } }) => ({
